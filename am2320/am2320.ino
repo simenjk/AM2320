@@ -21,9 +21,6 @@ void setup() {
   
 }
 
-
-
-
 void loop() {
 
   if (am2320.readTemperatureAndHumidity(&t, &h)) {
