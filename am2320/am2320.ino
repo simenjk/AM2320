@@ -5,6 +5,8 @@
 
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
 
+float t, h;
+
 void setup() {
 
   Serial.begin(9600);
@@ -23,13 +25,12 @@ void setup() {
 
 
 void loop() {
-  Serial.print("Temp: ");
-  Serial.print(am2320.readTemperature());
-  Serial.print(" C");
-  Serial.print("\t\t");
-  Serial.print("Humidity: ");
-  Serial.print(am2320.readHumidity());
-  Serial.println(" \%");
 
-  delay(2000);
+  if (am2320.readTemperatureAndHumidity(&t, &h)) {
+  Serial.print("Temp: "); Serial.println(t);
+  Serial.print("Humidity: "); Serial.println(h);
+  delay(1000);
+  }
+  else {Serial.println("Error");}
+
 }
