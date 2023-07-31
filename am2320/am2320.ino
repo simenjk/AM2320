@@ -10,6 +10,7 @@ float t, h;
 void setup() {
 
   Serial.begin(9600);
+  pinMode(32, OUTPUT);
   
   while(!Serial) {
     Serial.print("Waiting for serial.");
@@ -24,10 +25,17 @@ void setup() {
 void loop() {
 
   if (am2320.readTemperatureAndHumidity(&t, &h)) {
-  Serial.print("Temp: "); Serial.println(t);
-  Serial.print("Humidity: "); Serial.println(h);
-  delay(1000);
+    if (t > 20){
+      digitalWrite(32, HIGH);
+      Serial.print("High Temperature "); Serial.println(t);
+      Serial.print("Humidity: "); Serial.println(h);
+      delay(1000);
   }
-  else {Serial.println("Error");}
-
+    else{
+    Serial.print("Temp: "); Serial.println(t);
+    Serial.print("Humidity: "); Serial.println(h);
+    delay(1000);
+    }
+  }
 }
+
