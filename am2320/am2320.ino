@@ -1,11 +1,18 @@
 // 
 
+#include <Wire.h>
+#include <PubSubClient.h>
 #include "Adafruit_Sensor.h"
 #include "Adafruit_AM2320.h"
 
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
-
 float t, h;
+
+const char* ssid = "xxx";
+const char* pass = "xxx";
+const char* mqtt_URL = "xxx";
+const int mqtt_port = 8883;
+const int mqtt_socket port = 8884;
 
 void setup() {
 
