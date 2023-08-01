@@ -7,7 +7,7 @@
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
 float t, h;
 
-const char* ssid = "xxx";
+const char* ssid = "xxxx";
 const char* pass = "xxx";
 const char* mqtt_URL = "xxx";
 const int mqtt_port = 8883;
