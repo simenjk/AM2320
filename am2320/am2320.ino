@@ -7,36 +7,18 @@
 
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
 float t, h;
+long lastMsg = 0;
 
 const char* ssid = "xxx";
 const char* pass = "xxx";
 const char* mqtt_URL = "mqtt-dashboard.com";
 const int mqtt_port = 8884;
-const int mqtt_socket_port = 8884;
 const char* mqtt_username = "xxx";
 const char* mqtt_pass = "xxx";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-long lastMsg = 0;
-
-
-void reconnect() {
-  Serial.println("Connecting to MQTT Broker...");
-  while (!client.connected()) {
-      Serial.println("Reconnecting to MQTT Broker..");
-      String clientId = "ESP32Client-";
-      clientId += String(random(0xffff), HEX);
-      Serial.print(".");
-      
-      if (client.connect(clientId.c_str())) {
-        Serial.println("Connected.");
-        // subscribe to topic
-        client.subscribe("sensors/message");
-      }      
-  }
-}
 
 void setup() {
   
@@ -60,13 +42,10 @@ void setup() {
 }
 
 void loop() {
-
+  // Connecting to MQTT
   if(!client.connected()){
     reconnect();
   }
-
-  //StaticJsonDocument<80> doc;
-  char output[80];
 
   // Delay between sending messages
   long now = millis();
@@ -75,6 +54,7 @@ void loop() {
   if  (now- lastMsg > 10000){
     lastMsg = now;
 
+    // Prints out temperature and humidity to Serial and sends data with MQTT
     float temperature = am2320.readTemperature();
     char tempString[8];
     dtostrf(temperature, 1, 2, tempString);
@@ -88,19 +68,10 @@ void loop() {
     Serial.print("Humidity: ");
     Serial.println(humString);
     client.publish("sensors/humidity", humString);
-
-    // Add variables to JSON document 
-    //doc["t"] = temp;
-    //doc["h"] = humidity;
-
-    //serializeJson(doc, output);
-    //Serial.print(output);
-    //client.publish("/home/sensors", output);
-
-
   }
-/*
 
+/*
+// LED lights up if temperature is too high.
   if (am2320.readTemperatureAndHumidity(&t, &h)) {
     if (t > 25){
       digitalWrite(32, HIGH);
@@ -117,10 +88,3 @@ void loop() {
   */
 }
 
-  void callback(char* topic, byte* message, unsigned int length) {
-  Serial.print("Callback - ");
-  Serial.print("Message:");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)message[i]);
-  }
-}
